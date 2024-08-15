@@ -1,0 +1,86 @@
+{% load static %}
+
+<div class="left-side-bar">
+    <div class="brand-logo">
+        <a href="javascript:;">
+            <img src="{% static 'images/logo-colored.svg' %}" alt="" class="dark-logo" />
+            <img src="{% static 'images/logo-white.svg' %}" alt="" class="light-logo" />
+        </a>
+        <div class="close-sidebar" data-toggle="left-sidebar-close">
+            <i class="ion-close-round"></i>
+        </div>
+    </div>
+    <div class="menu-block customscroll">
+        <div class="sidebar-menu icon-style-1 icon-list-style-3">
+            <ul id="accordion-menu">
+                <li class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle no-arrow">
+                        <i class="micon bi bi-house"></i>                       
+                        <span class="mtext">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <div class="dropdown-divider"></div>
+                </li>
+                {% if user.is_staff %}
+                    <li class="dropdown">
+                        <a href="javascript:;" class="dropdown-toggle">
+                            <i class="micon icon-copy dw dw-settings1"></i>
+                            <span class="mtext">Administração</span>
+                        </a>
+                        <ul class="submenu">
+                            <li>
+                                <a href="{% url 'admin:index' %}" target="_blank">Page Admin</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="javascript:;" class="dropdown-toggle">
+                            <i class="micon icon-copy dw dw-user1"></i>
+                            <span class="mtext">Usuários</span>
+                        </a>
+                        <ul class="submenu">
+                            <li>
+                                {% if 'admin_register' in request.path %}
+                                    <a href="{% url 'admin_register' %}" target="_self" class="active">Registrar Usuário</a>
+                                {% else %}
+                                    <a href="{% url 'admin_register' %}" target="_self">Registrar Usuário</a>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+                
+                <li>
+                    <div class="dropdown-divider"></div>
+                </li>
+                
+                <li class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle">
+                        <i class="micon icon-copy ion-model-s label-icon-required"></i>
+                        <span class="mtext">Carros</span>
+                    </a>
+                    <ul class="submenu">
+                        {% if user.is_authenticated %}
+                            <li>
+                                {% if 'new_car' in request.path or 'car_update' in request.path %}
+                                    <a href="{% url 'new_car' %}" target="_self" class="active">Inserir Carro</a>
+                                {% else %}
+                                    <a href="{% url 'new_car' %}" target="_self">Inserir Carro</a>
+                                {% endif %}
+                            </li>
+                        {% endif %}
+                        <li>
+                            {% if 'cars_list' in request.path or 'car_detail' in request.path %}
+                                <a href="{% url 'cars_list' %}" target="_self" class="active">Listar Carros</a>
+                            {% else %}
+                                <a href="{% url 'cars_list' %}" target="_self">Listar Carros</a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

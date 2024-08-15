@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load l10n %}
+{% block title %}Novo Carro{% endblock title %}
+
+{% block styles %}
+    <!-- Inter Font -->
+    <link href="{% static 'css/InterFont.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main/core.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main/icon-font.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main/sweetalert2.min.css' %}" />
+    
+{% endblock styles %}
+
+{% block body %}
+    {% include 'header.html' %}
+    {% include 'menu.html' %}
+
+    {% block content %}
+    
+    <div class="mobile-menu-overlay"></div>
+    <div class="main-container">
+        <div class="pd-ltr-20 xs-pd-20-10">
+            {% for msg in messages %}
+                {% if msg.tags == 'error' %}
+                    <div class="alert alert-danger alert-dismissible fade show box-shadow" role="alert">
+                {% else %}
+                    <div class="alert alert-{{msg.tags}} alert-dismissible fade show box-shadow" role="alert">
+                {% endif %}
+                    <strong>{{ msg }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="icon-copy ion-close-round box-shadow"></i>
+                    </button>
+                </div>
+            {% endfor %}
+
+            <div class="min-height-200px">
+                <div class="page-header">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <nav aria-label="breadcrumb" role="navigation">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a href="index.html">Home</a>
+                                    </li>
+                                    <li class="breadcrumb-item" aria-current="page">Carros</li>
+                                    {% if 'car_update' in request.path %}
+                                        <li class="breadcrumb-item active" aria-current="page">Atualizar Carro</li>
+                                    {% else %}
+                                        <li class="breadcrumb-item active" aria-current="page">Novo Carro</li>
+                                    {% endif %}
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                {% if form.errors %}
+                    {% for field, error in form.errors.items %}
+                        <div class="alert alert-danger alert-dismissible fade show box-shadow" role="alert">
+                            {% if field == 'value' %}
+                                <strong>&rarr; Valor:</strong>
+                            {% elif field == 'factory_year' %}
+                                <strong>&rarr; Ano de Fabricação:</strong>
+                            {% endif %}
+                            
+                            <span>{{ error }}</span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">
+                                    <i class="icon-copy ion-close-round"></i>
+                                </span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="card-box border-radius-10 pd-ltr-20 pb-10 pt-0 mb-30 box-shadow">
+                    <div class="title pt-20">
+                        {% if 'car_update' in request.path %}
+                            <h5>ATUALIZAR CARRO</h5>
+                        {% else %}
+                            <h5>INSERIR NOVO CARRO</h5>
+                        {% endif %}
+                    </div>
+                    <hr>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="form-group mb-0 div-input">
+                                    <label class="label-icon-required">Modelo do Carro</label>
+                                    <i class="icon-copy dw dw-car dw-input-icon label-icon-required"></i>
+                                    {{ form.model|add_class:"form-control form-input input-required"|attr:'placeholder:Informe o Modelo do Carro' }}
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12">    
+                                <div class="form-group mb-0 div-input">
+                                    <div class="form-group mb-0 div-input">
+                                        <label class="weight-600 label-icon-required">Marca do Carro</label>
+                                        {{ form.brand|add_class:"custom-select2 form-control form-input input-required" }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12">
+                                <div class="form-group mb-0 div-input">
+                                    <label class="label-icon-required">Ano Fabricação</label>
+                                    <i class="icon-copy dw dw-calendar1 dw-input-icon label-icon-required"></i>
+                                    {{ form.factory_year|add_class:"form-control form-input input-required"|attr:'placeholder:Ano de Fabricação' }}
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12">
+                                <div class="form-group mb-0 div-input">
+                                    <label class="label-icon-required">Ano Modelo</label>
+                                    <i class="icon-copy dw dw-calendar-6 dw-input-icon label-icon-required"></i>
+                                    {{ form.model_year|add_class:"form-control form-input input-required"|attr:'placeholder:Ano do Modelo' }}
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12">
+                                <div class="form-group mb-0 div-input">
+                                    <label class="label-icon-required">Placa</label>
+                                    <i class="icon-copy dw dw-credit-card dw-input-icon label-icon-required"></i>
+                                    {{ form.plate|add_class:"form-control form-input input-required"|attr:'placeholder:AAA-0123' }}
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12">
+                                <div class="form-group mb-0 div-input">
+                                    <label class="label-icon-required">Valor</label>
+                                    <i class="icon-copy dw dw-money-2 dw-input-icon label-icon-required"></i>
+                                    {{ form.value|add_class:"form-control form-input input-required"|attr:'placeholder:R$' }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="form-group mb-0 div-input">
+                                    <label>Descrição do Carro</label>
+                                    <i class="icon-copy bi bi-info-square input-icon-textarea"></i>
+                                    {{ form.bio|add_class:"form-control form-input" }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="form-group mb-0 div-input" id="div-input-image">
+                                    <label class="label-icon-required">Imagem do Carro</label><br>
+                                    {{ form.photo|add_class:"form-control-file form-control input-required"|attr:'placeholder:Foto' }}
+                                </div>
+                            </div>
+                        </div>                        
+                        <hr class="end-form">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <i class="icon-copy bi bi-info-square-fill label-icon-required"></i> Campos Obrigatórios
+                            </div>
+                            <div class="col-md-12 col-sm-12">
+                                <i class="icon-copy bi bi-info-square-fill icon-non-required"></i> Campos Opcionais
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row mb-10">
+                            {% if 'car_update' in request.path %}
+                                <div class="col-md-2 col-sm-12"></div>
+                                    <div class="col-md-4 col-sm-12">
+                                        <button type="submit" class="btn btn-success btn-lg btn-block">
+                                            SALVAR &nbsp;
+                                            <i class="icon-copy dw dw-checked"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4 col-sm-12">
+                                        <a class="btn btn-danger btn-md btn-block" href="javascript:;" onClick="ConfirmarDelete({{car.pk}})">
+                                            <i class="icon-copy dw dw-delete-3"></i>
+                                            &nbsp;&nbsp; DELETAR
+                                        </a>
+                                    </div>
+                                <div class="col-md-2 col-sm-12"></div>
+                            {% else %}
+                                <div class="col-md-4 col-sm-12"></div>
+                                    <div class="col-md-4 col-sm-12">
+                                        <button type="submit" class="btn btn-success btn-lg btn-block">
+                                            SALVAR &nbsp;
+                                            <i class="icon-copy dw dw-checked"></i>
+                                        </button>
+                                    </div>
+                                <div class="col-md-4 col-sm-12"></div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock content %}
+
+    {% block script %}
+        <script src="{% static 'js/main/core.js' %}"></script>
+        <script src="{% static 'js/main/sweetalert2.all.min.js' %}"></script>
+        <script src="{% static 'js/main/layout-settings.js' %}"></script>
+        <script src="{% static 'js/main/script.js' %}"></script>
+        <script src="{% static 'js/main/confirm-delete.js' %}"></script>
+    {% endblock script %}
+{% endblock body %}
